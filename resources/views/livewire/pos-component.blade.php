@@ -17,7 +17,7 @@
                                 @if ($variants)
                                     @foreach ($variants as $item)
                                         <div class="col-md-3 mb-2">
-                                            <div class="card text-center">
+                                            <div class="card text-center" style="cursor: pointer;" wire:click="addCart({{ $item->id }})">
                                                 <div class="card-body d-flex justify-content-center">
                                                     <img src="{{ asset('storage/'. $item->product->image ?? '') }}" class="img-fluid" alt="{{ $item->product->name ?? '' }}" style="max-width:100px;max-height:100px;">
                                                 </div>
@@ -61,6 +61,71 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div class="col-md-4">
+            {{-- <div class="card">
+                <div class="card-header">
+                    Billing Section
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>QTY</th>
+                                <th>Price</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (count($cartItems) > 0)
+                                @foreach ($cartItems as $item)
+                                <tr>
+                                    <td>1</td>
+                                    
+                                </tr>
+                                @endforeach
+                               
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+            </div> --}}
+            <div class="card">
+                <div class="card-header">
+                    Billing Section
+                </div>
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>QTY</th>
+                                <th>Price</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($cartItems as $index => $item)
+                                <tr>
+                                    <td>
+                                        <img src="{{ asset('storage/'. $item['image']) }}" alt="Product Image" style="max-width: 65px;max-height: 65px;">
+                                        <strong>{{ \Illuminate\Support\Str::limit($item['name'], 10, '...') }}</strong></td>
 
+                                    <td>
+                                        <input type="number" min="1" max="{{ $item['selling_quantity'] }}" class="form-control" wire:model="cartItems.{{ $index }}.quantity" wire:change="handleQuantityChange({{ $index }})" style="max-width: 5rem;">
+
+                                    </td>
+                                    <td>${{ number_format($item['total_price'], 2) }}</td>
+                                    <td>
+                                        <button class="btn btn-danger" wire:click="removeCartItem({{ $index }})">Delete</button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </div>
 </div>

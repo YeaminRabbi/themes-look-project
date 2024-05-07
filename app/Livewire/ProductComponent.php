@@ -139,7 +139,6 @@ class ProductComponent extends Component
             'image' => $imagePath,
         ]);
 
-        // Save attributes for the product
         if($this->productAttributes){
             foreach ($this->productAttributes as $attribute) {
                 $attribute['product_id'] = $product->id;
@@ -147,7 +146,6 @@ class ProductComponent extends Component
             }
         }
 
-        // Reset form inputs and attributes
         $this->resetFormInputs();
         $this->resetAttributes();
 
@@ -236,7 +234,6 @@ class ProductComponent extends Component
             'tax' => $this->tax,
         ]);
 
-        // Handle file upload
         if ($this->file) {
             $imagePath = $this->file->store('products', 'public');
             $product->update(['image' => $imagePath]);
@@ -244,7 +241,6 @@ class ProductComponent extends Component
 
         $product->attributes()->delete(); 
 
-        // Create new attributes
         foreach ($this->productAttributes as $attribute) {
             $attribute['product_id'] = $product->id;
             $product->attributes()->create($attribute);

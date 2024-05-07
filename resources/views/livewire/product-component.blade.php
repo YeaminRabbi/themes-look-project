@@ -26,7 +26,7 @@
                         @if ($products)
                             @foreach ($products as $key => $item)
                                 <tr>
-                                    <th scope="row">{{ $key + 1 }}</th>
+                                    <td scope="row">{{ $key + 1 }}</td>
                                     <td><img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" style="max-width: 100px; height: auto;"></td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->slug }}</td>
