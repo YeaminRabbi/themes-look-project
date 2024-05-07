@@ -40,7 +40,8 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return back()->with('success', 'Category Created Successfully');
+        toastr()->success('Category created successfully!');
+        return back();
 
     }
 
@@ -74,7 +75,8 @@ class CategoryController extends Controller
             'slug' => Str::slug($request->name),
         ]);
 
-        return back()->with('success', 'Category Updated Successfully');
+        toastr()->success('Category updated successfully!');
+        return back();
 
     }
 
@@ -84,6 +86,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
-        return back()->with('warning', 'Category Removed Successfully');
+        toastr()->warning('Category removed successfully!');
+        return back();
     }
 }
