@@ -31,16 +31,23 @@ class PosComponent extends Component
 
     public function render()
     {
-       $products = Product::query()
+        $variants = ProductAttribute::query()
             ->when(!empty($this->searchQuery), function ($query) {
-                return $query->where('name', 'like', '%' . $this->searchQuery . '%')
-                                ->orWhere('slug', 'like', '%' . $this->searchQuery . '%');
+                // Filter by variant attributes or product name
+                return $query->whereHas('product', function ($q) {
+                    $q->where('name', 'like', '%' . $this->searchQuery . '%')
+                    ->orWhere('slug', 'like', '%' . $this->searchQuery . '%');
+                })
+                ->orWhere('color_id', 'like', '%' . $this->searchQuery . '%')
+                ->orWhere('size_id', 'like', '%' . $this->searchQuery . '%');
             })
+            ->whereHas('product')
+            ->with(['product']) // Load related product data
             ->latest()
             ->simplePaginate($this->productsPerPage);
 
         return view('livewire.pos-component', [
-            'products' => $products, // Passing the paginator to the view
+            'variants' => $variants, // Passing the paginator with variants
         ]);
     }
 }

@@ -14,15 +14,37 @@
                         </div>
                         <div class="col-md-12 mb-3">
                             <div class="row">
-                                @if ($products)
-                                    @foreach ($products as $product)
+                                @if ($variants)
+                                    @foreach ($variants as $item)
                                         <div class="col-md-3 mb-2">
                                             <div class="card text-center">
                                                 <div class="card-body d-flex justify-content-center">
-                                                    <img src="{{ asset('storage/'. $product->image) }}" class="img-fluid" alt="{{ $product->name }}" style="max-width:100px;max-height:100px;">
+                                                    <img src="{{ asset('storage/'. $item->product->image ?? '') }}" class="img-fluid" alt="{{ $item->product->name ?? '' }}" style="max-width:100px;max-height:100px;">
                                                 </div>
                                                 <div class="card-footer">
-                                                    <p>{{ $product->name }}</p>
+                                                    <span>{{ $item->product->name }}</span> <br>
+                                                    <span>{{ $item->color->name }} / {{ $item->size->name }}</span> <br>
+                                                    <div>
+                                                        @php
+                                                            $originalPrice = number_format($item->selling_price, 2);
+                                                            $discountPercentage = $item->product->discount ?? 0;
+                                                        @endphp
+
+                                                        @if ($discountPercentage > 0)
+                                                            <!-- Calculate and display discounted selling price -->
+                                                            @php
+                                                                $discountedPrice = $item->selling_price * ((100 - $discountPercentage) / 100);
+                                                            @endphp
+                                                            <span style="text-decoration: line-through;">
+                                                                ${{ $originalPrice }}
+                                                            </span>
+                                                            <span class="text-danger">
+                                                                ${{ number_format($discountedPrice, 2) }}
+                                                            </span>
+                                                        @else
+                                                            <span>${{ $originalPrice }}</span>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -31,7 +53,7 @@
                                 @endif
                             </div>
                             <div class="d-flex justify-content-center mt-4">
-                                {{ $products->links() }}
+                                {{ $variants->links() }}
                             </div>
                         </div>
                     </div>
