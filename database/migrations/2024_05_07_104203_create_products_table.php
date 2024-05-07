@@ -16,14 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug');
             $table->foreignId('category_id');
-            $table->foreignId('color_id');
-            $table->foreignId('size_id');
             $table->string('unit');
             $table->string('unit_value');
-            $table->float('selling_price');
-            $table->float('purchase_price');
             $table->tinyinteger('discount')->nullable();
             $table->tinyinteger('tax')->nullable();
+            $table->string('image')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -3,17 +3,22 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use App\Models\Product;
 use App\Models\ProductAttribute;
 use App\Models\Color;
 use App\Models\Size;
 use App\Models\Category;
+use App\Services\ImageService;
 use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 
 class ProductComponent extends Component
 {
-    public $tableView = false;
-    public $formView = true;
+    use WithFileUploads; 
+
+    public $tableView = true;
+    public $formView = false;
 
     public $products = null;
     public $categories = null;
@@ -32,6 +37,7 @@ class ProductComponent extends Component
     public $purchase_price;
     public $discount;
     public $tax;
+    public $file;
 
     public $productAttributes = [
         [
@@ -43,22 +49,19 @@ class ProductComponent extends Component
     ];
 
     private $unitsWithValues = [
-        'kg' => ['1kg', '2kg', '3kg', '4kg', '5kg', '6kg', '7kg', '8kg', '9kg', '10kg'],
-        'litter' => ['1litter', '2litters', '3litters', '4litters', '5litters', '6litters', '7litters', '8litters', '9litters', '10litters'],
-        'pieces' => ['1piece', '2pieces', '3pieces', '4pieces', '5pieces', '6pieces', '7pieces', '8pieces', '9pieces', '10pieces']
+        'kg' => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        'litter' => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        'pieces' => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
     ];
 
     protected $rules = [
         'name' => 'required|string|max:255',
         'category_id' => 'required|exists:categories,id',
-        'color_id' => 'required|exists:colors,id',
-        'size_id' => 'required|exists:sizes,id',
         'unit' => 'required|in:kg,litter,pieces',
         'unit_value' => 'required',
-        'selling_price' => 'required|numeric|min:0',
-        'purchase_price' => 'required|numeric|min:0',
         'discount' => 'nullable|numeric|min:0',
         'tax' => 'nullable|numeric|min:0',
+        'file' => 'required|image',
     ];
 
     
@@ -92,78 +95,56 @@ class ProductComponent extends Component
         $this->unit_values = $this->unitsWithValues[$unit] ?? [];
     }
 
-    // public function addAttribute()
-    // {
-    //     // Add a new set of attributes
-    //     $this->attributes[] = [
-    //         'color_id' => null,
-    //         'size_id' => null,
-    //         'purchase_price' => null,
-    //         'selling_price' => null,
-    //     ];
-    // }
+    public function addAttribute()
+    {
+        $this->productAttributes[] = [
+            'color_id' => null,
+            'size_id' => null,
+            'purchase_price' => null,
+            'selling_price' => null,
+        ];
+    }
 
-    // public function removeAttribute($index)
-    // {
-    //     // Remove a set of attributes based on the index
-    //     unset($this->attributes[$index]);
-    //     $this->attributes = array_values($this->attributes);
-    // }
+    public function removeAttribute($index)
+    {
+        unset($this->productAttributes[$index]);
+        $this->productAttributes = array_values($this->productAttributes);
+    }
 
     public function storeProduct()
     {
         $this->validate();
 
-        $product = new Product([
+        $imagePath = $this->file->store('products', 'public');
+
+        $product = Product::create([
             'name' => $this->name,
             'slug' => Str::slug($this->name),
             'category_id' => $this->category_id,
-            'size_id' => $this->size_id,
-            'color_id' => $this->color_id,
             'unit' => $this->unit,
             'unit_value' => $this->unit_value,
-            'selling_price' => $this->selling_price,
-            'purchase_price' => $this->purchase_price,
             'discount' => $this->discount,
             'tax' => $this->tax,
+            'image' => $imagePath,
         ]);
 
-        $product->save();
+       
 
+        // Save attributes for the product
+        if($this->productAttributes){
+            foreach ($this->productAttributes as $attribute) {
+                $attribute['product_id'] = $product->id;
+                $product->attributes()->create($attribute);
+            }
+        }
+
+        // Reset form inputs and attributes
         $this->resetFormInputs();
+        $this->resetAttributes();
+
         $this->loadProducts();
-
         toastr()->success('Product created successfully!');
-
     }
-
-    // public function storeProduct()
-    // {
-    //     $this->validate();
-
-    //     // Create the product
-    //     $product = Product::create([
-    //         'name' => $this->name,
-    //         'slug' => Str::slug($this->name),
-    //         'category_id' => $this->category_id,
-    //         'unit' => $this->unit,
-    //         'unit_value' => $this->unit_value,
-    //         'discount' => $this->discount,
-    //         'tax' => $this->tax,
-    //     ]);
-
-    //     // Save attributes for the product
-    //     foreach ($this->attributes as $attribute) {
-    //         $product->attributes()->create($attribute);
-    //     }
-
-    //     // Reset form inputs and attributes
-    //     $this->resetFormInputs();
-    //     $this->resetAttributes();
-
-    //     $this->loadProducts();
-    //     toastr()->success('Product created successfully!');
-    // }
 
     private function resetFormInputs()
     {
@@ -177,19 +158,20 @@ class ProductComponent extends Component
         $this->discount = '';
         $this->tax = '';
         $this->color_id = '';
+        $this->file = null;
     }
 
-    // private function resetAttributes()
-    // {
-    //     $this->attributes = [
-    //         [
-    //             'color_id' => null,
-    //             'size_id' => null,
-    //             'purchase_price' => null,
-    //             'selling_price' => null,
-    //         ]
-    //     ];
-    // }
+    private function resetAttributes()
+    {
+        $this->productAttributes = [
+            [
+                'color_id' => null,
+                'size_id' => null,
+                'purchase_price' => null,
+                'selling_price' => null,
+            ]
+        ];
+    }
 
     public function viewTable()
     {
@@ -208,8 +190,5 @@ class ProductComponent extends Component
         return view('livewire.product-component');
     }
 
-    // if ($request->hasFile('file')) {
-    //     $service = new ImageService();
-    //     $service->store($request, $banner);          
-    // }
+    
 }

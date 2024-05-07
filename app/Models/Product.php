@@ -22,6 +22,7 @@ class Product extends Model
         'purchase_price',
         'discount',
         'tax',
+        'image',
     ];
 
     public function category()
