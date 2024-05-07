@@ -122,7 +122,11 @@ class ProductComponent extends Component
         
         $this->validate();
 
-        $imagePath = $this->file->store('products', 'public');
+        if($this->file)
+        {
+            $imagePath = $this->file->store('products', 'public');
+        }
+
 
         $product = Product::create([
             'name' => $this->name,
@@ -134,8 +138,6 @@ class ProductComponent extends Component
             'tax' => $this->tax,
             'image' => $imagePath,
         ]);
-
-       
 
         // Save attributes for the product
         if($this->productAttributes){

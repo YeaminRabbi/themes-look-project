@@ -111,8 +111,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Unit</label>
-                                    <select class="form-control" name="unit" wire:model="unit" required
-                                        wire:change="handleUnitValues($event.target.value)">
+                                    <select class="form-control" name="unit" wire:model="unit" required>
                                         <option value="" selected>--select unit--</option>
                                         @if ($units)
                                             @foreach ($units as $item)

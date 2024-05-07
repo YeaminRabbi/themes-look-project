@@ -39,6 +39,9 @@
                         <a class="dropdown-item {{ Route::currentRouteName() == 'color.*' ? 'active' : '' }}" href="{{ route('color.index') }}">Color</a>
                     </div>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link {{ Route::currentRouteName() == 'pos' ? 'active' : '' }}" href="{{ route('pos') }}">POS</a>
+                </li>
             </ul>
         </div>
     </nav>
