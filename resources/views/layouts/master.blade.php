@@ -36,7 +36,7 @@
                     <div class="dropdown-menu">
                         <a class="dropdown-item {{ Route::currentRouteName() == 'category.*' ? 'active' : '' }}" href="{{ route('category.index') }}">Category</a>
                         <a class="dropdown-item {{ Route::currentRouteName() == 'size.*' ? 'active' : '' }}" href="{{ route('size.index') }}">Size</a>
-                        <a class="dropdown-item {{ Route::currentRouteName() == 'category.*' ? 'active' : '' }}" href="#">Color</a>
+                        <a class="dropdown-item {{ Route::currentRouteName() == 'color.*' ? 'active' : '' }}" href="{{ route('color.index') }}">Color</a>
                     </div>
                 </li>
             </ul>
