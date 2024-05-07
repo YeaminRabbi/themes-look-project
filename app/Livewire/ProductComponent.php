@@ -9,12 +9,11 @@ use App\Models\Color;
 use App\Models\Size;
 use App\Models\Category;
 use Illuminate\Support\Str;
-// use Livewire\Features\SupportAttributes\AttributeCollection;
 
 class ProductComponent extends Component
 {
-    public $tableView = true;
-    public $formView = false;
+    public $tableView = false;
+    public $formView = true;
 
     public $products = null;
     public $categories = null;
