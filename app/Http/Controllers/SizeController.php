@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Str;
+use App\Models\Size;
 use Illuminate\Http\Request;
-use App\Models\Category;
+use Illuminate\Support\Str;
 
-class CategoryController extends Controller
+class SizeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $categories = Category::latest()->get();
-        return view('category.index', compact('categories'));
+        $sizes = Size::latest()->get();
+        return view('size.index', compact('sizes'));
     }
 
     /**
@@ -26,12 +26,12 @@ class CategoryController extends Controller
             'name' => 'required|string'
         ]);
 
-        Category::create([
+        Size::create([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
         ]);
 
-        toastr()->success('Category created successfully!');
+        toastr()->success('Size created successfully!');
         return back();
 
     }
@@ -39,26 +39,26 @@ class CategoryController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Category $category)
+    public function edit(Size $size)
     {
-        return view('category.edit', compact('category'));
+        return view('size.edit', compact('size'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Category $category)
+    public function update(Request $request, Size $size)
     {
         $request->validate([
             'name' => 'required|string'
         ]);
 
-        $category->update([
+        $size->update([
             'name' => $request->name,
             'slug' => Str::slug($request->name),
         ]);
 
-        toastr()->success('Category updated successfully!');
+        toastr()->success('Size updated successfully!');
         return back();
 
     }
@@ -66,10 +66,10 @@ class CategoryController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy(Size $size)
     {
-        $category->delete();
-        toastr()->warning('Category removed successfully!');
+        $size->delete();
+        toastr()->warning('Size removed successfully!');
         return back();
     }
 }

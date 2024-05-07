@@ -19,3 +19,4 @@ Route::get('/', function () {
 })->name('home');
 
 Route::resource('category', CategoryController::class);
+Route::resource('size', SizeController::class);

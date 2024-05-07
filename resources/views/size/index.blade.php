@@ -6,7 +6,7 @@
     <div class="col-md-8">
         <div class="row">
             <div class="col-md-12">
-                <h2>Category Table</h2>
+                <h2>Size Table</h2>
             </div>
         </div>
         <table class="table">
@@ -19,17 +19,17 @@
                 </tr>
             </thead>
             <tbody>
-                @if ($categories)
-                    @foreach ($categories as $key => $item)
+                @if ($sizes)
+                    @foreach ($sizes as $key => $item)
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $item->name }}</td>
                             <td>{{ $item->slug }}</td>
                             <td>
-                                <a href="{{ route('category.edit', $item->id) }}" class="btn btn-sm btn-warning">
+                                <a href="{{ route('size.edit', $item->id) }}" class="btn btn-sm btn-warning">
                                     Edit
                                 </a>
-                                <form action="{{ route('category.destroy', $item->id) }}"
+                                <form action="{{ route('size.destroy', $item->id) }}"
                                     style="display: inline;" method="POST">
                                     @csrf
                                     @method('DELETE')
@@ -40,7 +40,7 @@
                         </tr>
                     @endforeach
                 @else
-                    <span>No Category Found</span>
+                    <span>No Size Found</span>
                 @endif
             </tbody>
         </table>
@@ -51,11 +51,11 @@
     <div class="col-md-4">
         <div class="row">
             <div class="col-md-12">
-                <h2>Add Category</h2>
+                <h2>Add Size</h2>
             </div>
         </div>
         <div class="form-section">
-            <form method="post" action="{{ route('category.store') }}">
+            <form method="post" action="{{ route('size.store') }}">
                 @csrf
                 <div class="form-group">
                   <input type="text" class="form-control" name="name" id="name" required>
