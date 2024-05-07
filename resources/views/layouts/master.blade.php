@@ -8,7 +8,7 @@
     <title>Project</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
-    
+  
     @livewireStyles
 </head>
 
@@ -23,7 +23,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item active">
-                    <a class="nav-link" href="{{ route('home') }}">Home</a>
+                    <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Product</a>
@@ -34,15 +34,18 @@
                         Attributes
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Size</a>
-                        <a class="dropdown-item" href="#">Color</a>
+                        <a class="dropdown-item {{ Route::currentRouteName() == 'category.*' ? 'active' : '' }}" href="{{ route('category.index') }}">Category</a>
+                        <a class="dropdown-item {{ Route::currentRouteName() == 'size.*' ? 'active' : '' }}" href="{{ route('size.index') }}">Size</a>
+                        <a class="dropdown-item {{ Route::currentRouteName() == 'color.*' ? 'active' : '' }}" href="{{ route('color.index') }}">Color</a>
                     </div>
                 </li>
             </ul>
         </div>
     </nav>
 
-    @yield('content')
+    <div class="container">
+        @yield('content')
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
         integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous">
@@ -50,6 +53,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous">
     </script>
+ 
     @livewireScripts
 </body>
 
