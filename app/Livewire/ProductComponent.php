@@ -39,6 +39,8 @@ class ProductComponent extends Component
     public $tax;
     public $file;
 
+    public $selectedProductId = null;
+
     public $productAttributes = [
         [
             'color_id' => null,
@@ -49,9 +51,9 @@ class ProductComponent extends Component
     ];
 
     private $unitsWithValues = [
-        'kg' => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        'litter' => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
-        'pieces' => ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'],
+        'kg', 
+        'litter' ,
+        'pieces' 
     ];
 
     protected $rules = [
@@ -61,7 +63,7 @@ class ProductComponent extends Component
         'unit_value' => 'required',
         'discount' => 'nullable|numeric|min:0',
         'tax' => 'nullable|numeric|min:0',
-        'file' => 'required|image',
+        'file' => 'nullable|image',
     ];
 
     
@@ -87,12 +89,7 @@ class ProductComponent extends Component
 
     public function loadUnits()
     {
-        $this->units = array_keys($this->unitsWithValues);
-    }
-
-    public function handleUnitValues($unit)
-    {
-        $this->unit_values = $this->unitsWithValues[$unit] ?? [];
+        $this->units = $this->unitsWithValues;
     }
 
     public function addAttribute()
@@ -113,6 +110,16 @@ class ProductComponent extends Component
 
     public function storeProduct()
     {
+        if ($this->selectedProductId === null) {
+            $this->createProduct();
+        } else {
+            $this->updateProduct();
+        }
+    }
+
+    public function createProduct()
+    {
+        
         $this->validate();
 
         $imagePath = $this->file->store('products', 'public');
@@ -159,6 +166,7 @@ class ProductComponent extends Component
         $this->tax = '';
         $this->color_id = '';
         $this->file = null;
+        $this->selectedProductId = null;
     }
 
     private function resetAttributes()
@@ -183,6 +191,78 @@ class ProductComponent extends Component
     {
         $this->tableView = false;
         $this->formView = true;
+    }
+
+    public function editProduct($productId)
+    {
+        $product = Product::findOrFail($productId);
+
+        $this->name = $product->name;
+        $this->category_id = $product->category_id;
+        $this->unit = $product->unit;
+        $this->unit_value = $product->unit_value;
+        $this->discount = $product->discount;
+        $this->tax = $product->tax;
+        $this->file = null;
+        
+        $this->productAttributes = $product->attributes->map(function($attribute) {
+            return [
+                'color_id' => $attribute->color_id,
+                'size_id' => $attribute->size_id,
+                'purchase_price' => $attribute->purchase_price,
+                'selling_price' => $attribute->selling_price,
+            ];
+        })->toArray();
+        
+        $this->selectedProductId = $product->id;
+        $this->viewForm();
+    }
+
+    public function updateProduct()
+    {
+        $this->validate();
+
+        $product = Product::findOrFail($this->selectedProductId);
+
+        $product->update([
+            'name' => $this->name,
+            'slug' => Str::slug($this->name),
+            'category_id' => $this->category_id,
+            'unit' => $this->unit,
+            'unit_value' => $this->unit_value,
+            'discount' => $this->discount,
+            'tax' => $this->tax,
+        ]);
+
+        // Handle file upload
+        if ($this->file) {
+            $imagePath = $this->file->store('products', 'public');
+            $product->update(['image' => $imagePath]);
+        }
+
+        $product->attributes()->delete(); 
+
+        // Create new attributes
+        foreach ($this->productAttributes as $attribute) {
+            $attribute['product_id'] = $product->id;
+            $product->attributes()->create($attribute);
+        }
+
+        $this->resetFormInputs();
+        $this->resetAttributes();
+
+        $this->loadProducts();
+        $this->viewTable();
+
+        toastr()->success('Product updated successfully!');
+    }
+
+    public function deleteProduct(Product $product)
+    {
+        $product->delete();
+        $this->loadProducts();
+        toastr()->warning('Product removed successfully!');
+
     }
 
     public function render()

@@ -16,7 +16,10 @@
                             <th scope="col">Name</th>
                             <th scope="col">Code</th>
                             <th scope="col">Category</th>
+                            <th scope="col">Qty</th>
+                            <th scope="col">Tax/Discount</th>
                             <th scope="col">Attributes</th>
+                            <th scope="col">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -29,6 +32,22 @@
                                     <td>{{ $item->slug }}</td>
                                     <td> {{ $item->category->name }}</td>
                                     <td>
+                                        <span>{{ $item->unit_value }} </span> 
+                                    </td>
+                                    <td>
+                                        @if ($item->tax > 0)
+                                            <p class="badge badge-info">Tax : {{ $item->tax }}%</p>
+                                        @endif
+                                        @if ($item->discount > 0)
+                                            <p class="badge badge-warning">Discount: {{ $item->discount }}%</p>
+                                        @endif
+
+                                        @if ($item->tax <= 0 && $item->discount <= 0)
+                                            <p class="badge badge-success">N/A</p>
+                                            
+                                        @endif
+                                    </td>
+                                    <td>
                                         @if ($item->attributes()->count() > 0)
                                             @foreach ($item->attributes as $attribute)
                                               <div>
@@ -39,7 +58,11 @@
                                               </div>
                                             @endforeach
                                         @endif
-                                        
+                                    </td>
+                                    
+                                    <td>
+                                        <a class="btn btn-sm btn-primary" wire:click="editProduct({{ $item->id }})">Edit</a>
+                                        <a class="btn btn-sm btn-danger" wire:click="deleteProduct({{ $item->id }})">Delete</a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -103,14 +126,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Quanity/Unit Value</label>
-                                    <select class="form-control" name="unit_value" wire:model="unit_value" required>
-                                        <option value="" selected>--select unit value--</option>
-                                        @if ($unit_values)
-                                            @foreach ($unit_values as $item)
-                                                <option value="{{ $item }}">{{ $item }}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
+                                    <input type="number" class="form-control" name="unit_value" wire:model="unit_value" required>
                                     @error('unit_value')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -134,7 +150,7 @@
                                 <div class="form-group">
                                     <label>Image</label>
                                     <input type="file" class="form-control" name="file" wire:model="file"
-                                        placeholder="Enter product image" required>
+                                        placeholder="Enter product image">
                                     @error('file')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
