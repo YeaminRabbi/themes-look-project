@@ -11,4 +11,9 @@ class Size extends Model
     use HasFactory,SoftDeletes;
     
     protected $fillable = ['name', 'slug'];
+
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

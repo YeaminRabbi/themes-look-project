@@ -12,8 +12,8 @@ class Category extends Model
 
     protected $fillable = ['name', 'slug'];
 
-    // public function projects()
-    // {
-    //     return $this->hasMany(Project::class);
-    // }
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

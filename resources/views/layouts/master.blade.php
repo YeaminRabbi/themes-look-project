@@ -26,7 +26,7 @@
                     <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Product</a>
+                    <a class="nav-link {{ Route::currentRouteName() == 'product.*' ? 'active' : '' }}" href="{{ route('product.index') }}">Product</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -43,7 +43,7 @@
         </div>
     </nav>
 
-    <div class="container">
+    <div class="container-xxl px-5">
         @yield('content')
     </div>
 
