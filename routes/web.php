@@ -21,3 +21,4 @@ Route::get('/', function () {
 Route::resource('category', CategoryController::class);
 Route::resource('size', SizeController::class);
 Route::resource('color', ColorController::class);
+Route::resource('product', ProductController::class);
