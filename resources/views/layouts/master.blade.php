@@ -22,11 +22,11 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link {{ Route::currentRouteName() == 'home' ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+                <li class="nav-item {{ Route::currentRouteName() == 'home' ? 'active' : '' }}">
+                    <a class="nav-link " href="{{ route('home') }}">Home</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ Route::currentRouteName() == 'product.*' ? 'active' : '' }}" href="{{ route('product.index') }}">Product</a>
+                <li class="nav-item {{ Route::currentRouteName() == 'product.*' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('product.index') }}">Product</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown"
@@ -39,8 +39,11 @@
                         <a class="dropdown-item {{ Route::currentRouteName() == 'color.*' ? 'active' : '' }}" href="{{ route('color.index') }}">Color</a>
                     </div>
                 </li>
-                <li class="nav-item active">
-                    <a class="nav-link {{ Route::currentRouteName() == 'pos' ? 'active' : '' }}" href="{{ route('pos') }}">POS</a>
+                <li class="nav-item {{ Route::currentRouteName() == 'pos' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('pos') }}">POS</a>
+                </li>
+                <li class="nav-item {{ Route::currentRouteName() == 'order.list' || Route::currentRouteName() == 'order.list.items' ? 'active' : '' }}">
+                    <a class="nav-link" href="{{ route('order.list') }}">Orders</a>
                 </li>
             </ul>
         </div>

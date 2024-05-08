@@ -24,3 +24,5 @@ Route::resource('color', ColorController::class);
 Route::resource('product', ProductController::class);
 
 Route::get('pos', [CartController::class, 'index'])->name('pos');
+Route::get('order/history', [OrderController::class, 'index'])->name('order.list');
+Route::get('order/{order}/items', [OrderController::class, 'orderItems'])->name('order.list.items');
