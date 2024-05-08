@@ -45,4 +45,11 @@ class Product extends Model
         return $this->hasMany(ProductAttribute::class);
     }
 
+    public function getPrice()
+    {
+        $attributes = collect($this->attributes);
+        $avg = $attributes->sum('selling_price') / $attributes->count();
+        return $avg ?? 0;
+    }
+
 }

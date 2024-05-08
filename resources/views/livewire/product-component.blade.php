@@ -26,7 +26,7 @@
                         @if ($products)
                             @foreach ($products as $key => $item)
                                 <tr>
-                                    <th scope="row">{{ $key + 1 }}</th>
+                                    <td scope="row">{{ $key + 1 }}</td>
                                     <td><img src="{{ asset('storage/'.$item->image) }}" alt="{{ $item->name }}" style="max-width: 100px; height: auto;"></td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->slug }}</td>
@@ -111,8 +111,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Unit</label>
-                                    <select class="form-control" name="unit" wire:model="unit" required
-                                        wire:change="handleUnitValues($event.target.value)">
+                                    <select class="form-control" name="unit" wire:model="unit" required>
                                         <option value="" selected>--select unit--</option>
                                         @if ($units)
                                             @foreach ($units as $item)
