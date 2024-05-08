@@ -6,7 +6,7 @@
     <div class="col-md-12">
         <div class="row py-2">
             <div class="col-md-12 d-flex justify-content-between">
-                <h2>Color Table</h2>
+                <h2>Order Item Table</h2>
                 <a href="{{ route('order.list') }}" class="btn btn-primary">Order List</a>
             </div>
         </div>
