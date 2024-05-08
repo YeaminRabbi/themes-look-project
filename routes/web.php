@@ -14,9 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+Route::get('/', [DashboardController::class, 'index'])->name('home');
 
 Route::resource('category', CategoryController::class);
 Route::resource('size', SizeController::class);
